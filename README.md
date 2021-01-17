@@ -1,0 +1,1 @@
+# Svelte Tailwind Extension Boilerplate
