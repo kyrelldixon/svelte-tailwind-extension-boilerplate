@@ -1,0 +1,19 @@
+{
+  "private": true,
+  "name": "svelte-tailwind-extension-boilerplate",
+  "version": "0.0.1",
+  "description": "A browser extension template built with Svelte and TailwindCSS",
+  "scripts": {
+    "build": "rollup -c",
+    "start": "rollup -c -w"
+  },
+  "main": "index.js",
+  "author": "Kyrell Dixon <kyrell@kyrelldixon.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^17.0.0",
+    "@rollup/plugin-node-resolve": "^11.1.0",
+    "rollup": "^2.36.2",
+    "rollup-plugin-chrome-extension": "^3.5.2"
+  }
+}
