@@ -3,14 +3,15 @@
 import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import svelte from "rollup-plugin-svelte";
+import zip from "rollup-plugin-zip";
 import { terser } from "rollup-plugin-terser";
-
-const isProduction = !process.env.ROLLUP_WATCH;
-
 import {
   chromeExtension,
   simpleReloader,
 } from "rollup-plugin-chrome-extension";
+import { emptyDir } from "rollup-plugin-empty-dir";
+
+const isProduction = !process.env.ROLLUP_WATCH;
 
 export default {
   input: "src/manifest.json",
@@ -34,8 +35,11 @@ export default {
     }),
     // https://github.com/rollup/plugins/tree/master/packages/commonjs
     commonjs(),
-
-    // If we're building for production minify
+    // Empties the output dir before a new build
+    emptyDir(),
+    // If we're building for production, minify
     isProduction && terser(),
+    // Outputs a zip file in ./releases
+    isProduction && zip({ dir: "releases" }),
   ],
 };
