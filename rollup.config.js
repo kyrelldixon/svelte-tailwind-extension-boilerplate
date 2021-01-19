@@ -11,7 +11,7 @@ import {
 } from "rollup-plugin-chrome-extension";
 import { emptyDir } from "rollup-plugin-empty-dir";
 
-const isProduction = !process.env.ROLLUP_WATCH;
+const production = !process.env.ROLLUP_WATCH;
 
 export default {
   input: "src/manifest.json",
@@ -26,7 +26,7 @@ export default {
     svelte({
       compilerOptions: {
         // enable run-time checks when not in production
-        dev: !isProduction,
+        dev: !production,
       },
     }),
     // the plugins below are optional
@@ -38,8 +38,8 @@ export default {
     // Empties the output dir before a new build
     emptyDir(),
     // If we're building for production, minify
-    isProduction && terser(),
+    production && terser(),
     // Outputs a zip file in ./releases
-    isProduction && zip({ dir: "releases" }),
+    production && zip({ dir: "releases" }),
   ],
 };
