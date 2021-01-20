@@ -23,7 +23,8 @@
   "license": "MIT",
   "scripts": {
     "build": "rollup -c",
-    "dev": "rollup -c -w"
+    "dev": "rollup -c -w",
+    "test": "jest --watch"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
