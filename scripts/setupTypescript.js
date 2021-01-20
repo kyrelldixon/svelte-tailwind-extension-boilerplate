@@ -172,12 +172,6 @@ if (!argv[2]) {
   if (remainingFiles.length === 1 && remainingFiles[0] === ".DS_store") {
     fs.unlinkSync(path.join(__dirname, ".DS_store"));
   }
-
-  // Check if the scripts folder is empty
-  if (fs.readdirSync(path.join(__dirname)).length === 0) {
-    // Remove the scripts folder
-    fs.rmdirSync(path.join(__dirname));
-  }
 }
 
 // Adds the extension recommendation
