@@ -59,7 +59,7 @@ const afterPopupIndexTSPath = path.join(
 );
 fs.renameSync(beforePopupIndexJSPath, afterPopupIndexTSPath);
 
-// do the same for src/background/index.js
+// mv src/background/index.js to index.ts
 const beforeBackgroundIndexJSPath = path.join(
   projectRoot,
   "src",
@@ -74,7 +74,10 @@ const afterBackgroundIndexTSPath = path.join(
 );
 fs.renameSync(beforeBackgroundIndexJSPath, afterBackgroundIndexTSPath);
 
-// and src/content/index.js
+// make the background script a module
+fs.appendFileSync(afterBackgroundIndexTSPath, "\nexport {}\n");
+
+// mv src/content/index.js to index.ts
 const beforeContentIndexJSPath = path.join(
   projectRoot,
   "src",
@@ -89,6 +92,9 @@ const afterContentIndexTSPath = path.join(
 );
 fs.renameSync(beforeContentIndexJSPath, afterContentIndexTSPath);
 
+// make the content script a module
+fs.appendFileSync(afterContentIndexTSPath, "\nexport {}\n");
+
 // Switch the Counter.svelte file to use TS
 const counterSveltePath = path.join(
   projectRoot,
@@ -101,7 +107,7 @@ counterFile = counterFile.replace("<script>", '<script lang="ts">');
 fs.writeFileSync(counterSveltePath, counterFile);
 
 // Switch index.js to index.ts in index.html
-let popupHTMLPath = path.join(projectRoot, "src", "popup", "index.html");
+const popupHTMLPath = path.join(projectRoot, "src", "popup", "index.html");
 let popupHTML = fs.readFileSync(popupHTMLPath, "utf8");
 popupHTML = popupHTML.replace(`src="index.js"`, `src="index.ts"`);
 fs.writeFileSync(popupHTMLPath, popupHTML);
@@ -143,7 +149,7 @@ rollupConfig = rollupConfig.replace(
 rollupConfig = rollupConfig.replace(
   "commonjs(),",
   `commonjs(),
-    typescript(),`
+    typescript({ sourceMap: false }),`
 );
 fs.writeFileSync(rollupConfigPath, rollupConfig);
 
