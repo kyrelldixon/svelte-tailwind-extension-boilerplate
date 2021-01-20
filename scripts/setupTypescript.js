@@ -44,10 +44,50 @@ fs.writeFileSync(
   JSON.stringify(packageJSON, null, "  ")
 );
 
-// mv src/popup/index.js to index.ts - note, we need to edit rollup.config.js for this too
-const beforeMainJSPath = path.join(projectRoot, "src", "popup", "index.js");
-const afterMainTSPath = path.join(projectRoot, "src", "popup", "index.ts");
-fs.renameSync(beforeMainJSPath, afterMainTSPath);
+// mv src/popup/index.js to index.ts - note, we need to edit manifest.json for this too
+const beforePopupIndexJSPath = path.join(
+  projectRoot,
+  "src",
+  "popup",
+  "index.js"
+);
+const afterPopupIndexTSPath = path.join(
+  projectRoot,
+  "src",
+  "popup",
+  "index.ts"
+);
+fs.renameSync(beforePopupIndexJSPath, afterPopupIndexTSPath);
+
+// do the same for src/background/index.js
+const beforeBackgroundIndexJSPath = path.join(
+  projectRoot,
+  "src",
+  "background",
+  "index.js"
+);
+const afterBackgroundIndexTSPath = path.join(
+  projectRoot,
+  "src",
+  "background",
+  "index.ts"
+);
+fs.renameSync(beforeBackgroundIndexJSPath, afterBackgroundIndexTSPath);
+
+// and src/content/index.js
+const beforeContentIndexJSPath = path.join(
+  projectRoot,
+  "src",
+  "content",
+  "index.js"
+);
+const afterContentIndexTSPath = path.join(
+  projectRoot,
+  "src",
+  "content",
+  "index.ts"
+);
+fs.renameSync(beforeContentIndexJSPath, afterContentIndexTSPath);
 
 // Switch the Counter.svelte file to use TS
 const counterSveltePath = path.join(
@@ -59,6 +99,26 @@ const counterSveltePath = path.join(
 let counterFile = fs.readFileSync(counterSveltePath, "utf8");
 counterFile = counterFile.replace("<script>", '<script lang="ts">');
 fs.writeFileSync(counterSveltePath, counterFile);
+
+// Switch index.js to index.ts in index.html
+let popupHTMLPath = path.join(projectRoot, "src", "popup", "index.html");
+let popupHTML = fs.readFileSync(popupHTMLPath, "utf8");
+popupHTML = popupHTML.replace(`src="index.js"`, `src="index.ts"`);
+fs.writeFileSync(popupHTMLPath, popupHTML);
+
+// Replace name of entry points
+const manifestPath = path.join(projectRoot, "src", "manifest.json");
+const manifestJSON = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+manifestJSON.background.scripts = ["background/index.ts"];
+manifestJSON.content_scripts = [
+  {
+    js: ["content/index.ts"],
+    matches: ["https://*/*", "http://*/*"],
+  },
+];
+
+// Write the manifest JSON
+fs.writeFileSync(manifestPath, JSON.stringify(manifestJSON, null, "  "));
 
 // Edit rollup config
 const rollupConfigPath = path.join(projectRoot, "rollup.config.js");
@@ -83,10 +143,7 @@ rollupConfig = rollupConfig.replace(
 rollupConfig = rollupConfig.replace(
   "commonjs(),",
   `commonjs(),
-    typescript({
-      sourceMap: !production,
-      inlineSources: !production
-    }),`
+    typescript(),`
 );
 fs.writeFileSync(rollupConfigPath, rollupConfig);
 
