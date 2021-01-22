@@ -32,6 +32,20 @@ yarn build
 This will create a ZIP file with your package name and version in the `releases`
 folder.
 
+## Using TypeScript
+
+This template comes with a script to set up a TypeScript development environment, you can run it immediately after cloning the template with:
+
+```bash
+node scripts/setupTypeScript.js
+```
+
+Or remove the script via:
+
+```bash
+rm scripts/setupTypeScript.js
+```
+
 ## Source Layout
 
 Your manifest is at `src/manifest.json`, and Rollup will bundle any files you
