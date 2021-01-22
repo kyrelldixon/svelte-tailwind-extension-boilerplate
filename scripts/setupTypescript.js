@@ -31,6 +31,7 @@ packageJSON.devDependencies = Object.assign(packageJSON.devDependencies, {
   typescript: "^3.9.3",
   tslib: "^2.0.0",
   "@tsconfig/svelte": "^1.0.0",
+  "ts-jest": "^26.4.4",
 });
 
 // Add script for checking
@@ -161,6 +162,42 @@ const tsconfig = `{
 }`;
 const tsconfigPath = path.join(projectRoot, "tsconfig.json");
 fs.writeFileSync(tsconfigPath, tsconfig);
+
+// Add Svelte Config
+const svelteConfigPath = path.join(projectRoot, "svelte.config.js");
+fs.writeFileSync(
+  svelteConfigPath,
+  `const sveltePreprocess = require("svelte-preprocess");
+
+module.exports = {
+  preprocess: sveltePreprocess(),
+};`
+);
+
+// Edit Jest Config
+const jestConfigPath = path.join(projectRoot, "jest.config.js");
+let jestConfig = fs.readFileSync(jestConfigPath, "utf8");
+
+// Edit jest transform
+jestConfig = jestConfig.replace(
+  `"svelte-jester",`,
+  `[
+      "svelte-jester",
+      {
+        preprocess: true,
+      },
+    ],
+    "^.+\\.js$": "babel-jest",
+    "^.+\\.ts$": "ts-jest",`
+);
+
+// Edit jest file extensions
+jestConfig = jestConfig.replace(
+  `moduleFileExtensions: ["js", "svelte"],`,
+  `moduleFileExtensions: ["js", "ts", "svelte"],`
+);
+
+fs.writeFileSync(jestConfigPath, jestConfig);
 
 // Delete this script, but not during testing
 if (!argv[2]) {
