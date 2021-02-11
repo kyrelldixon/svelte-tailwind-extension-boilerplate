@@ -6,12 +6,18 @@ This boilerplate also comes with **automatic reloading** during development with
 
 ## Get Started
 
+### Using `degit`
+
 Type this into your terminal:
 
 ```sh
-npx degit kyrelldixon/svelte-tailwind-extension-boilerplate
+npx degit "kyrelldixon/svelte-tailwind-extension-boilerplate#main" your-extension-name
 yarn
 ```
+
+### Using the Github template
+
+Github templates allow you to create a copy of a repo to build your own project with. Click **Use this template** at the top of the page to get your own copy.
 
 ### Development
 
